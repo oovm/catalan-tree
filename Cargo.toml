@@ -1,0 +1,10 @@
+[package]
+name = "catalan"
+version = "0.1.1"
+authors = ["Aster <galaster@foxmail.com>"]
+description = "binary tree of n variables where the parent node represents a function and the child node represents a value."
+edition = "2018"
+license = "MPL-2.0"
+readme = "Readme.md"
+repository = "https://github.com/GalAster/catalan-rs"
+exclude = ["/tests/*", "/.idea/*", "/benches/*"]
