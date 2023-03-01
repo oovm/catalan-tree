@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, rc::Rc};
+use std::{collections::BTreeMap, sync::Arc};
 
 /// A element in full binary tree
 /// Can be a atom or a node
@@ -9,9 +9,9 @@ pub enum BinaryNode {
     /// A node in full binary tree
     Binary {
         /// left hand side leaf
-        lhs: Rc<BinaryNode>,
+        lhs: Arc<BinaryNode>,
         /// right hand side leaf
-        rhs: Rc<BinaryNode>,
+        rhs: Arc<BinaryNode>,
     },
 }
 
@@ -27,18 +27,18 @@ impl BinaryNode {
     /// * `lhs`:
     /// * `rhs`:
     ///
-    /// returns: Rc<BinaryNode>
-    pub fn atomic() -> Rc<Self> {
-        Rc::new(BinaryNode::Atomic)
+    /// returns: Arc<BinaryNode>
+    pub fn atomic() -> Arc<Self> {
+        Arc::new(BinaryNode::Atomic)
     }
     /// # Arguments
     ///
     /// * `lhs`:
     /// * `rhs`:
     ///
-    /// returns: Rc<BinaryNode>
-    pub fn binary(lhs: &Rc<Self>, rhs: &Rc<Self>) -> Rc<Self> {
-        Rc::new(BinaryNode::Binary { lhs: lhs.clone(), rhs: rhs.clone() })
+    /// returns: Arc<BinaryNode>
+    pub fn binary(lhs: &Arc<Self>, rhs: &Arc<Self>) -> Arc<Self> {
+        Arc::new(BinaryNode::Binary { lhs: lhs.clone(), rhs: rhs.clone() })
     }
     /// Count nodes in a full binary tree
     pub fn nodes(&self) -> usize {
@@ -52,19 +52,22 @@ impl BinaryNode {
 /// A cache for full binary trees
 #[derive(Clone, Debug, Default)]
 pub struct FullBinaryTrees {
-    // keep rc pointer to avoid memory leak
-    cache: BTreeMap<usize, Vec<Rc<BinaryNode>>>,
+    // keep Arc pointer to avoid memory leak
+    cache: BTreeMap<usize, Vec<Arc<BinaryNode>>>,
 }
 
 impl FullBinaryTrees {
-    /// Clean all rc pointers
+    /// Clean all Arc pointers
     pub fn clear(&mut self) {
         self.cache.clear();
     }
     /// Query for a full binary tree of given nodes
-    pub fn inquire(&self, count: usize) -> Option<&[Rc<BinaryNode>]> {
+    pub fn inquire(&self, count: usize) -> &[Arc<BinaryNode>] {
         let idx = count * 2 + 1;
-        self.cache.get(&idx).map(|v| v.as_slice())
+        match self.cache.get(&idx) {
+            Some(s) => s.as_slice(),
+            None => unreachable!("Cache must be built before query!"),
+        }
     }
 }
 
@@ -86,10 +89,10 @@ impl FullBinaryTrees {
     /// assert_eq!(cache.build_trees(6).len(), 42);
     /// assert_eq!(cache.build_trees(7).len(), 132);
     /// ```
-    pub fn build_trees(&mut self, count: usize) -> Vec<Rc<BinaryNode>> {
+    pub fn build_trees(&mut self, count: usize) -> Vec<Arc<BinaryNode>> {
         self.build_by_nodes(count * 2 - 1)
     }
-    fn build_by_nodes(&mut self, count: usize) -> Vec<Rc<BinaryNode>> {
+    fn build_by_nodes(&mut self, count: usize) -> Vec<Arc<BinaryNode>> {
         if !self.cache.contains_key(&count) {
             let mut trees = vec![];
             if count == 1 {

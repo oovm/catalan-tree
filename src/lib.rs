@@ -3,6 +3,7 @@
 #[doc = include_str!("../Readme.md")]
 mod fbt;
 mod hardcode;
+mod expression;
 
 pub use crate::{
     fbt::{BinaryNode, FullBinaryTrees},

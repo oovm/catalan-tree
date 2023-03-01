@@ -20,3 +20,11 @@ fn test2() {
     assert_eq!(cache.build_trees(6).len(), 42);
     assert_eq!(cache.build_trees(7).len(), 132);
 }
+
+#[test]
+fn test3() {
+    let mut cache = FullBinaryTrees::default();
+    for tree in cache.build_trees(3) {
+        println!("{:#?}", tree.as_expression(&[1, 2, 3], &["+", "-"]));
+    }
+}
