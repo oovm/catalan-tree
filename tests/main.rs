@@ -1,4 +1,4 @@
-use catalan::tree::catalan_tree3;
+use catalan::{catalan_tree3, FullBinaryTrees};
 
 #[test]
 fn test() {
@@ -9,4 +9,14 @@ fn test() {
     for f in catalan_tree3::<i32>() {
         println!("{}", f(&fs, &ns))
     }
+}
+
+#[test]
+fn test2() {
+    let mut cache = FullBinaryTrees::default();
+    assert_eq!(cache.build_trees(3).len(), 2);
+    assert_eq!(cache.build_trees(4).len(), 5);
+    assert_eq!(cache.build_trees(5).len(), 14);
+    assert_eq!(cache.build_trees(6).len(), 42);
+    assert_eq!(cache.build_trees(7).len(), 132);
 }
