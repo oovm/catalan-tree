@@ -63,7 +63,7 @@ impl FullBinaryTrees {
     }
     /// Query for a full binary tree of given nodes
     pub fn inquire(&self, count: usize) -> &[Arc<BinaryNode>] {
-        let idx = count * 2 + 1;
+        let idx = count * 2 - 1;
         match self.cache.get(&idx) {
             Some(s) => s.as_slice(),
             None => unreachable!("Cache must be built before query!"),

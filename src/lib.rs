@@ -6,7 +6,7 @@ mod fbt;
 mod hardcode;
 
 pub use crate::{
-    expression::{inverse_polish::ReversePolishNotation, ExpressionNode},
+    expression::{inverse_polish::ReversePolishNotation, operators::OperatorPermutation, ExpressionNode},
     fbt::{BinaryNode, FullBinaryTrees},
     hardcode::{catalan_tree3, catalan_tree4, catalan_tree5, catalan_tree6},
 };

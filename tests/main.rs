@@ -1,4 +1,4 @@
-use catalan::{catalan_tree3, FullBinaryTrees};
+use catalan::{catalan_tree3, FullBinaryTrees, OperatorPermutation};
 
 #[test]
 fn test() {
@@ -31,5 +31,13 @@ fn test3() {
         println!("{:#?}", rpn);
         let expr = rpn.build_expression(value.clone(), operators.clone());
         println!("{:#?}", expr);
+    }
+}
+
+#[test]
+fn test4() {
+    let arr = OperatorPermutation::new(&["+", "-", "*"], 4);
+    for tree in arr {
+        println!("{:?}", tree);
     }
 }

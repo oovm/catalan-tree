@@ -1,11 +1,20 @@
-pub struct OperatorPermutation<O> {
+pub struct OperatorPermutation<O>
+where
+    O: Clone,
+{
     order: usize,
     length: usize,
     operators: Vec<O>,
 }
 
-impl<O> OperatorPermutation<O> {
-    pub fn new(operators: &[ExpressionAction], length: usize) -> Self {
+impl<O> OperatorPermutation<O>
+where
+    O: Clone,
+{
+    pub fn new(operators: &[O], length: usize) -> Self
+    where
+        O: PartialEq,
+    {
         let mut operators = operators.to_vec();
         operators.dedup();
         Self { order: 0, length, operators }
@@ -16,20 +25,24 @@ impl<O> OperatorPermutation<O> {
     }
 }
 
-impl<O> Iterator for OperatorPermutation<O> {
-    type Item = Vec<ExpressionAction>;
+impl<O> Iterator for OperatorPermutation<O>
+where
+    O: Clone,
+{
+    type Item = Vec<O>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.order >= self.operators.len().pow(self.length as u32) {
             return None;
         }
-        let mut actions = vec![self.operators[0]; self.length];
-        let mut pointer = self.order;
-        for i in 0..actions.len() {
-            actions[i] = self.operators[pointer % self.length];
-            pointer /= self.length;
+        let mut digits = vec![self.operators[0].clone(); self.length];
+        let mut rest = self.order;
+        // convert ot base self.length
+        for i in 0..digits.len() {
+            digits[i] = self.operators[rest % self.operators.len()].clone();
+            rest /= self.operators.len();
         }
         self.order += 1;
-        Some(actions)
+        Some(digits)
     }
 }
