@@ -8,3 +8,7 @@ license = "MPL-2.0"
 readme = "Readme.md"
 repository = "https://github.com/GalAster/catalan-rs"
 exclude = ["/tests/*", "/.idea/*", "/benches/*"]
+
+
+[dependencies]
+gen-iter = "0.3.0"
