@@ -1,6 +1,6 @@
 [package]
 name = "catalan"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Aster <galaster@foxmail.com>"]
 description = "binary tree of n variables where the parent node represents a function and the child node represents a value."
 edition = "2021"

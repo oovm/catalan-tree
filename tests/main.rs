@@ -1,4 +1,4 @@
-use catalan::{catalan_tree3, ExpressionNode, FullBinaryTrees, StackAction};
+use catalan::{catalan_tree3, FullBinaryTrees};
 
 #[test]
 fn test() {
@@ -24,11 +24,12 @@ fn test2() {
 #[test]
 fn test3() {
     let mut cache = FullBinaryTrees::default();
-    let mut value = vec![1, 2, 3, 4];
-    let mut operators = vec!["+", "-", "*"];
-
-    for tree in cache.build_trees(4) {
-        let out = tree.as_rpn().build_expression(&mut value, &mut operators);
-        println!("{:#?}", out);
+    let value = vec![1, 2, 3, 4];
+    let operators = vec!["+", "-", "*"];
+    for tree in cache.build_trees(value.len()) {
+        let rpn = tree.as_rpn();
+        println!("{:#?}", rpn);
+        let expr = rpn.build_expression(value.clone(), operators.clone());
+        println!("{:#?}", expr);
     }
 }

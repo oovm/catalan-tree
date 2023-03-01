@@ -6,6 +6,7 @@ use std::{
 use crate::BinaryNode;
 
 pub mod inverse_polish;
+pub mod operators;
 
 #[derive(Clone, Eq, PartialEq, Hash)]
 pub enum ExpressionNode<V, O> {
@@ -56,20 +57,20 @@ impl<V, O> ExpressionNode<V, O> {
 
 impl BinaryNode {
     /// Make the binary tree into an expression tree
-    pub fn as_expression<V, O>(&self, values: &mut Vec<V>, actions: &mut Vec<O>) -> Arc<ExpressionNode<V, O>>
-    where
-        V: Clone,
-        O: Clone,
-    {
+    pub fn as_expression<V, O>(&self, mut values: Vec<V>, mut actions: Vec<O>) -> Arc<ExpressionNode<V, O>> {
+        assert_eq!(values.len(), actions.len() + 1);
+        self.eat_expression(&mut values, &mut actions)
+    }
+    fn eat_expression<V, O>(&self, values: &mut Vec<V>, actions: &mut Vec<O>) -> Arc<ExpressionNode<V, O>> {
         match self {
             BinaryNode::Atomic => {
                 let atom = values.remove(0);
                 ExpressionNode::atomic(atom)
             }
             BinaryNode::Binary { lhs, rhs } => {
-                let operator = actions[0].clone();
-                let lhs = lhs.as_expression(values, actions);
-                let rhs = rhs.as_expression(values, actions);
+                let operator = actions.remove(0);
+                let lhs = lhs.eat_expression(values, actions);
+                let rhs = rhs.eat_expression(values, actions);
                 ExpressionNode::binary(operator, &lhs, &rhs)
             }
         }
