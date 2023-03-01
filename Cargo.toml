@@ -1,10 +1,11 @@
 [package]
 name = "catalan"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Aster <galaster@foxmail.com>"]
 description = "binary tree of n variables where the parent node represents a function and the child node represents a value."
 edition = "2021"
 license = "MPL-2.0"
 readme = "Readme.md"
-repository = "https://github.com/oovm/catalan-rs"
+repository = "https://github.com/oovm/catalan-tree"
+documentation = "https://docs.rs/catalan"
 exclude = ["/tests/*", "/.idea/*", "/benches/*"]

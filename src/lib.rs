@@ -1,5 +1,5 @@
-extern crate core;
-
+#[forbid(missing_docs)]
+#[forbid(missing_debug_implementations)]
 #[doc = include_str!("../Readme.md")]
 mod fbt;
 mod hardcode;

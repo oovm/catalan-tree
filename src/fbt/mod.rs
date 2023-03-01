@@ -1,10 +1,18 @@
-use core::slice::SlicePattern;
 use std::{collections::BTreeMap, rc::Rc};
 
+/// A element in full binary tree
+/// Can be a atom or a node
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
 pub enum BinaryNode {
+    /// A atom in full binary tree
     Atomic,
-    Binary { lhs: Rc<BinaryNode>, rhs: Rc<BinaryNode> },
+    /// A node in full binary tree
+    Binary {
+        /// left hand side leaf
+        lhs: Rc<BinaryNode>,
+        /// right hand side leaf
+        rhs: Rc<BinaryNode>,
+    },
 }
 
 impl Default for BinaryNode {
@@ -14,14 +22,34 @@ impl Default for BinaryNode {
 }
 
 impl BinaryNode {
+    /// # Arguments
+    ///
+    /// * `lhs`:
+    /// * `rhs`:
+    ///
+    /// returns: Rc<BinaryNode>
     pub fn atomic() -> Rc<Self> {
         Rc::new(BinaryNode::Atomic)
     }
+    /// # Arguments
+    ///
+    /// * `lhs`:
+    /// * `rhs`:
+    ///
+    /// returns: Rc<BinaryNode>
     pub fn binary(lhs: &Rc<Self>, rhs: &Rc<Self>) -> Rc<Self> {
         Rc::new(BinaryNode::Binary { lhs: lhs.clone(), rhs: rhs.clone() })
     }
+    /// Count nodes in a full binary tree
+    pub fn nodes(&self) -> usize {
+        match self {
+            BinaryNode::Atomic => 1,
+            BinaryNode::Binary { lhs, rhs } => lhs.nodes() + rhs.nodes(),
+        }
+    }
 }
 
+/// A cache for full binary trees
 #[derive(Clone, Debug, Default)]
 pub struct FullBinaryTrees {
     // keep rc pointer to avoid memory leak
@@ -29,12 +57,14 @@ pub struct FullBinaryTrees {
 }
 
 impl FullBinaryTrees {
+    /// Clean all rc pointers
     pub fn clear(&mut self) {
         self.cache.clear();
     }
+    /// Query for a full binary tree of given nodes
     pub fn inquire(&self, count: usize) -> Option<&[Rc<BinaryNode>]> {
-        let slice = self.cache.get(&count)?.as_slice();
-        Some(slice)
+        let idx = count * 2 + 1;
+        self.cache.get(&idx).map(|v| v.as_slice())
     }
 }
 
